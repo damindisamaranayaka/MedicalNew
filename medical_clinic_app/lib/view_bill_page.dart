@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+
 
 class ViewBillPage extends StatefulWidget {
   final String username;
@@ -22,49 +27,78 @@ class _ViewBillPageState extends State<ViewBillPage> {
     fetchBill();
   }
 
- Future<void> fetchBill() async {
-  try {
-    final response = await http.get(
-      Uri.parse("http://192.168.220.193:3000/api/bills/username/${widget.username}"),
-    );
+  Future<void> fetchBill() async {
+    try {
+      final response = await http.get(
+        Uri.parse("http://192.168.220.193:3000/api/bills/username/${widget.username}"),
+      );
 
-    print("Raw Response: ${response.body}"); // Debugging
+      if (response.statusCode == 200) {
+        final decodedResponse = json.decode(response.body);
 
-    if (response.statusCode == 200) {
-      final decodedResponse = json.decode(response.body);
-      print("Decoded Response: $decodedResponse"); // Debugging
-
-      if (decodedResponse is List && decodedResponse.isNotEmpty) {
-        setState(() {
-          bill = decodedResponse.last;
-          isLoading = false;
-        });
-      } else if (decodedResponse is Map && decodedResponse.containsKey("message")) {
-        setState(() {
-          errorMessage = decodedResponse["message"]; // Correctly setting error message
-          isLoading = false;
-        });
+        if (decodedResponse is List && decodedResponse.isNotEmpty) {
+          setState(() {
+            bill = decodedResponse.last;
+            isLoading = false;
+          });
+        } else {
+          setState(() {
+            errorMessage = "No bill found.";
+            isLoading = false;
+          });
+        }
       } else {
         setState(() {
-          errorMessage = "Unexpected response from server.";
+          errorMessage = "Error fetching bill. Server responded with status ${response.statusCode}";
           isLoading = false;
         });
       }
-    } else {
+    } catch (e) {
       setState(() {
-        errorMessage = "Error fetching bill. Server responded with status ${response.statusCode}";
+        errorMessage = "Failed to connect to server: $e";
         isLoading = false;
       });
     }
-  } catch (e) {
-    setState(() {
-      errorMessage = "Failed to connect to server: $e";
-      isLoading = false;
-    });
   }
-}
 
+  // 🔹 Generate PDF
+  Future<void> generatePDF() async {
+    final pdf = pw.Document();
 
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text("Billing Details", style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+                pw.Divider(),
+                pw.Text("Doctor Fee: LKR ${bill!["doctorFee"]}"),
+                pw.Text("Report Fee: LKR ${bill!["reportFee"]}"),
+                pw.Text("Clinic Fee: LKR ${bill!["clinicFee"]}"),
+                pw.Divider(),
+                pw.Text(
+                  "Total Fee: LKR ${bill!["totalFee"]}",
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18, color: PdfColors.red),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    // 🔹 Save PDF to Storage
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File("${directory.path}/bill_${widget.username}.pdf");
+    await file.writeAsBytes(await pdf.save());
+
+    // 🔹 Show Success Message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("PDF saved: ${file.path}")),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +175,22 @@ class _ViewBillPageState extends State<ViewBillPage> {
                               ],
                             ),
                             const SizedBox(height: 20),
+
+                            // 🔹 Download PDF Button
+                            ElevatedButton.icon(
+                              onPressed: generatePDF,
+                              icon: const Icon(Icons.download),
+                              label: const Text("Download PDF"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 10),
+
                             ElevatedButton(
                               onPressed: () => Navigator.pop(context),
                               style: ElevatedButton.styleFrom(
