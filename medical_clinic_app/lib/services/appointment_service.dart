@@ -1,10 +1,10 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class AppointmentService {
-  static const String baseUrl = 'http://localhost:3000/api/appointments'; // For Android Emulator use 10.0.2.2
+  static const String baseUrl = 'http://localhost:3000/api/appointments'; 
 
-  Future<bool> bookAppointment(Map<String, dynamic> appointmentData) async {
+  Future<String> bookAppointment(Map<String, dynamic> appointmentData) async {
     try {
       final response = await http.post(
         Uri.parse(baseUrl),
@@ -13,12 +13,32 @@ class AppointmentService {
       );
 
       if (response.statusCode == 201) {
-        return true;
+        return 'Appointment booked successfully!';
       } else {
-        return false;
+        final errorResponse = json.decode(response.body);
+        if (response.statusCode == 400 && errorResponse['message'] == 'This time slot is already booked.') {
+          return 'This time slot is already booked.';
+        } else {
+          return errorResponse['message'];
+        }
       }
     } catch (e) {
-      return false;
+      return 'Error booking appointment: $e';
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchAppointmentsByUsername(String username) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/username/$username'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((appointment) => appointment as Map<String, dynamic>).toList();
+      } else {
+        throw Exception('Failed to load appointments');
+      }
+    } catch (e) {
+      throw Exception('Error fetching appointments: $e');
     }
   }
 }

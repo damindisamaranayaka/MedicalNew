@@ -9,7 +9,6 @@ import 'view_appointments_page.dart';
 import 'view_bill_page.dart';
 import 'prescription.dart';
 
-
 class HomePage extends StatelessWidget {
   final String userName;
   final String patientId;
@@ -89,7 +88,7 @@ class HomePage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              ViewAppointmentsPage(patientId: patientId),
+                              ViewAppointmentsPage(username: userName),
                         ),
                       );
                     }),
@@ -100,7 +99,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MakeAppointmentPage(),
+                          builder: (context) => MakeAppointmentPage(patientId: patientId),
                         ),
                       );
                     }),
@@ -113,25 +112,23 @@ class HomePage extends StatelessWidget {
                     buildSidebarButton(
                         context, FontAwesomeIcons.prescription, 'View Prescription',
                         () {
-                      // Add the correct page navigation when available
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => PrescriptionPage(patientUsername: userName),
-
                         ),
                       );
                     }),
 
-                   buildSidebarButton(
-                      context, FontAwesomeIcons.receipt, 'View Bill', () {
+                    buildSidebarButton(
+                        context, FontAwesomeIcons.receipt, 'View Bill', () {
                       Navigator.push(
                         context,
-                       MaterialPageRoute(
-                         builder: (context) => ViewBillPage(username: userName), // Fix here
+                        MaterialPageRoute(
+                          builder: (context) => ViewBillPage(username: userName),
                         ),
                       );
-                  }),
+                    }),
 
                     buildSidebarButton(
                         context, FontAwesomeIcons.bookMedical, 'Health Educations',

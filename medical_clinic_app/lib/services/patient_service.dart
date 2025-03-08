@@ -34,6 +34,35 @@ class PatientService {
     }
   }
 
+// Fetch patient profile by username
+  Future<Map<String, dynamic>?> fetchPatientInfo(String username) async {
+    final token = await getToken(); // Retrieve the JWT token
+    if (token == null) {
+      print('User is not logged in. Please log in to continue.');
+      return null;
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse("$_baseUrl/patient/username/$username"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body); // Return patient data as a map
+      } else {
+        print("Failed to fetch patient info: ${response.body}");
+        return null;
+      }
+    } catch (error) {
+       print("Error fetching patient info: $error");
+      return null;
+    }
+  }
+
   // Save patient general information
   Future<bool> savePatientInfo(Map<String, dynamic> patientData) async {
     final token = await getToken(); // Retrieve the JWT token

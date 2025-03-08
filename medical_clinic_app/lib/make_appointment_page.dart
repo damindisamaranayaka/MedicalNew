@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import 'doctor_details_page.dart';
 
 class MakeAppointmentPage extends StatefulWidget {
-  const MakeAppointmentPage({super.key});
+  final String patientId; 
+  const MakeAppointmentPage({super.key, required this.patientId});
 
   @override
   State<MakeAppointmentPage> createState() => _MakeAppointmentPageState();
@@ -42,67 +43,92 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
         title: const Text('Make an Appointment'),
         backgroundColor: const Color.fromARGB(255, 99, 181, 249),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _doctors,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, color: Colors.red, size: 60),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Error: ${snapshot.error}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                'No doctors found.',
-                style: TextStyle(fontSize: 18),
-              ),
-            );
-          } else {
-            final doctors = snapshot.data!;
-            return ListView.builder(
-              itemCount: doctors.length,
-              itemBuilder: (context, index) {
-                final doctor = doctors[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: ListTile(
-                    leading: const Icon(Icons.person, size: 40),
-                    title: Text(
-                      doctor['fullName'] ?? 'Unknown',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color.fromARGB(255, 186, 205, 226), Color(0xFF67C8FF)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: FutureBuilder<List<Map<String, dynamic>>>(
+          future: _doctors,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error, color: Colors.red, size: 60),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Error: ${snapshot.error}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 16),
                     ),
-                    subtitle: Text(doctor['specialization'] ?? 'Not specified'),
-                    trailing: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DoctorDetailsPage(
-                              doctorDetails: doctor,
+                  ],
+                ),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No doctors found.',
+                  style: TextStyle(fontSize: 18),
+                ),
+              );
+            } else {
+              final doctors = snapshot.data!;
+              return ListView.builder(
+                itemCount: doctors.length,
+                itemBuilder: (context, index) {
+                  final doctor = doctors[index];
+                  return Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    elevation: 5,
+                    child: ListTile(
+                      leading: const CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.person, size: 40, color: Colors.blueAccent),
+                      ),
+                      title: Text(
+                        doctor['fullName'] ?? 'Unknown',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(doctor['specialization'] ?? 'Not specified'),
+                      trailing: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DoctorDetailsPage(
+                                doctorDetails: doctor,
+                                patientId: widget.patientId,
+                              ),
                             ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 99, 181, 249),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        );
-                      },
-                      child: const Text('Check'),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        ),
+                        child: const Text('Check'),
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
-          }
-        },
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }
