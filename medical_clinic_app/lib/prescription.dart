@@ -23,7 +23,7 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
   }
 
   Future<void> fetchPrescriptions() async {
-    final String apiUrl = "http://localhost:3000/api/prescriptions/username/${widget.patientUsername}";
+    final String apiUrl = "http://192.168.220.193:3000/api/prescriptions/username/${widget.patientUsername}";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));

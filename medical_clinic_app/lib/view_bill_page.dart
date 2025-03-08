@@ -25,7 +25,7 @@ class _ViewBillPageState extends State<ViewBillPage> {
  Future<void> fetchBill() async {
   try {
     final response = await http.get(
-      Uri.parse("http://localhost:3000/api/bills/username/${widget.username}"),
+      Uri.parse("http://192.168.220.193:3000/api/bills/username/${widget.username}"),
     );
 
     print("Raw Response: ${response.body}"); // Debugging
