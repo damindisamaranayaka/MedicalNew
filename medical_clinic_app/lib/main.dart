@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
 
   void checkBackendConnection() async {
     
-    final url = Uri.parse('http://localhost:3000');  // Backend URL
+    final url = Uri.parse('http://192.168.220.193:3000');  // Backend URL
     
     try {
       final response = await http.get(url);

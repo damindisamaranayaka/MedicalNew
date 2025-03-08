@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:medical_clinic_app/services/token_storage.dart';
 
 class PatientService {
-  final String _baseUrl = "http://localhost:3000/api"; // Replace with your API base URL
+  final String _baseUrl = "http://192.168.220.193:3000/api"; // Replace with your API base URL
 
   // Fetch patient profile by ID
   Future<Map<String, dynamic>?> fetchPatientProfile(String patientId) async {

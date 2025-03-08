@@ -15,9 +15,17 @@ const app = express();
 // Import database connection
 require('./db');
 
+// CORS configuration
+const corsOptions = {
+  origin: '*', // Allow all origins (for testing), or specify the allowed frontend URL
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
+};
+
+app.use(cors(corsOptions));  // Use the updated CORS configuration
+
 // Middleware
 app.use(express.json());
-app.use(cors()); // Enable CORS for frontend communication
 
 // Token verification middleware
 const authenticateToken = (req, res, next) => {
@@ -38,24 +46,6 @@ app.use('/api', appointmentRoutes); // API endpoint for appointments
 app.use("/api", billRoutes); // API endpoint for bills
 app.use("/api", prescriptionRoutes);
 
-// Fetch bill details by patient name
-/*app.get('/api/bills/:username', async (req, res) => {
-  try {
-    const username = req.params.username;
-
-    // Find the bill details based on patientName (full name)
-    const bills = await Bill.find({ username });
-
-    if (bills.length === 0) {
-      return res.status(404).json({ message: 'No bills found for this patient.' });
-    }
-
-    res.json(bills);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching bill details.', error });
-  }
-}); */
-
 // Default route
 app.get('/', (req, res) => {
   res.send('Welcome to the Medical Clinic API');
@@ -63,6 +53,6 @@ app.get('/', (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });

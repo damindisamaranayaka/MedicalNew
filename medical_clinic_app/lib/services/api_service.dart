@@ -5,7 +5,7 @@ import '../models/patient.dart';
 
 class ApiService {
   // Replace with your backend URL
-  static const String baseUrl = 'http://localhost:3000';
+  static const String baseUrl = 'http://192.168.220.193:3000';
 
   // Fetch all patients
   static Future<List<Patient>> fetchPatients() async {

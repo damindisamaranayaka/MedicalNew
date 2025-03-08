@@ -41,7 +41,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-    const String url = 'http://localhost:3000/api/register';
+    const String url = 'http://192.168.220.193:3000/api/register';
 
     try {
       final response = await http.post(

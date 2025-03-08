@@ -38,7 +38,7 @@ app.use('/api', appointmentRoutes); // Mount appointment routes at the /api path
 
 // Server listening on specified port
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0',() => {
   console.log(`Server is running on port ${PORT}`);
 });
 

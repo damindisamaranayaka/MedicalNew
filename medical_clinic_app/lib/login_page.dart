@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _login() async {
     final String username = _usernameController.text;
     final String password = _passwordController.text;
-    const String url = 'http://localhost:3000/api/login';
+    const String url = 'http://192.168.220.193:3000/api/login';
 
     try {
       final response = await http.post(

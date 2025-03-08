@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AppointmentService {
-  static const String baseUrl = 'http://localhost:3000/api/appointments'; 
+  static const String baseUrl = 'http://192.168.220.193:3000/api/appointments'; 
 
   Future<String> bookAppointment(Map<String, dynamic> appointmentData) async {
     try {

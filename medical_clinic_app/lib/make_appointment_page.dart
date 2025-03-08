@@ -21,7 +21,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   }
 
   Future<List<Map<String, dynamic>>> fetchDoctors() async {
-    const String apiUrl = 'http://localhost:3000/api/doctor'; // Replace with your API URL
+    const String apiUrl = 'http://192.168.220.193:3000/api/doctor'; // Replace with your API URL
     try {
       final response = await http.get(Uri.parse(apiUrl));
 
