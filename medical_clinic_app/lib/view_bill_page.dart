@@ -61,7 +61,7 @@ class _ViewBillPageState extends State<ViewBillPage> {
     }
   }
 
-  // 🔹 Generate PDF
+
   Future<void> generatePDF() async {
     final pdf = pw.Document();
 
@@ -176,7 +176,7 @@ class _ViewBillPageState extends State<ViewBillPage> {
                             ),
                             const SizedBox(height: 20),
 
-                            // 🔹 Download PDF Button
+                           
                             ElevatedButton.icon(
                               onPressed: generatePDF,
                               icon: const Icon(Icons.download),

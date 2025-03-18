@@ -7,7 +7,7 @@ const appointmentSchema = new mongoose.Schema({
   patientName: { type: String, required: true },
   patientEmail: { type: String, required: true },
   patientPhone: { type: String, required: true },
-  patientUsername: { type: String, required: true }, // Add patientUsername field
+  patientUsername: { type: String, required: true }, 
 });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

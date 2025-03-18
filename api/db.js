@@ -1,17 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const appointmentRoutes = require('./routes/appointmentRoutes'); // Import appointment routes
-require('dotenv').config(); // Load environment variables
+const appointmentRoutes = require('./routes/appointmentRoutes'); 
+require('dotenv').config(); 
 
 const app = express();
 
 // Middleware
 app.use(express.json());
 
-// MongoDB connection using the connection string from environment variables
+
 mongoose.connect(process.env.MONGODB_URI, {
-  //useNewUrlParser: true,
-  //useUnifiedTopology: true,
+
 })
   .then(() => {
     console.log('Connected to MongoDB');
@@ -41,6 +40,22 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0',() => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*const mongoose = require('mongoose');

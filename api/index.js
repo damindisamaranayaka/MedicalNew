@@ -7,24 +7,24 @@ require('dotenv').config();
 
 const patientRoutes = require('./routes/patientRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
-const appointmentRoutes = require('./routes/appointmentRoutes'); // Import appointment routes
-const billRoutes = require("./routes/billRoutes"); // Import bill routes
+const appointmentRoutes = require('./routes/appointmentRoutes'); 
+const billRoutes = require("./routes/billRoutes"); 
 const prescriptionRoutes = require("./routes/prescriptionRoutes");
 const app = express();
 
-// Import database connection
+
 require('./db');
 
 // CORS configuration
 const corsOptions = {
-  origin: '*', // Allow all origins (for testing), or specify the allowed frontend URL
+  origin: '*', 
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type, Authorization',
 };
 
 app.use(cors(corsOptions));  // Use the updated CORS configuration
 
-// Middleware
+
 app.use(express.json());
 
 // Token verification middleware

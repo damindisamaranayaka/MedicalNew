@@ -25,7 +25,7 @@ router.get("/bills/username/:username", async (req, res) => {
   }
 });
 
-// Add a new bill (Optional)
+// Add a new bill 
 router.post("/bills", async (req, res) => {
   try {
     const { patientName, username,doctorFee, reportFee, clinicFee, totalFee } = req.body;
