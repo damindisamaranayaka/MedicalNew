@@ -14,8 +14,8 @@ const patientSchema = new mongoose.Schema({
   generalInfo: {
     gender: { type: String, required: false },
     birthDate: { type: String, required: false, validate: /^\d{4}-\d{2}-\d{2}$/ },
-    height: { type: Number, required: false }, // Height in cm
-    weight: { type: Number, required: false }, // Weight in kg
+    height: { type: Number, required: false }, 
+    weight: { type: Number, required: false }, 
     reasonForVisit: { type: String, required: false },
   },
 
@@ -24,7 +24,7 @@ const patientSchema = new mongoose.Schema({
     drugAllergies: { type: String, default: '' }, // Free text
     otherIllnesses: { type: String, default: '' }, // Free text
     currentMedications: { type: String, default: '' }, // Free text
-    conditions: [{ type: String }], // Array of predefined conditions
+    conditions: [{ type: String }],
   },
 });
 
